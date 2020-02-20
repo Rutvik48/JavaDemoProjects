@@ -1,5 +1,9 @@
 package TriviaGameProject;
 
+import java.util.Scanner;
+
+import javax.print.DocFlavor.INPUT_STREAM;
+
 class TriviaGame extends QuestionDatabase {
 
 	private int curPoints = 0;
@@ -8,6 +12,7 @@ class TriviaGame extends QuestionDatabase {
 	// This will be initialized in main by calling
 	// QuestionDatabase.getNumberOfQuestion()
 	private static int totalNumOfQuestion = 0;
+	static Scanner gameInput = new Scanner(System.in);
 
 	// Bonus points will be given when user answers 3 questions correctly
 	// consecutively
@@ -25,11 +30,13 @@ class TriviaGame extends QuestionDatabase {
 		System.out.println(quesDbRef.getOP4());
 
 		System.out.print("\n\n Write the answere here: ");
+		System.out.println("Answer Check: " + quesDbRef.checkAns(gameInput.next()));
 	}
 
 	private static void startGame() {
 
-		for (int i = 0; i < totalNumOfQuestion; i++) {
+		for (int i = 0; i <= totalNumOfQuestion; i++) {
+			System.out.println("\n\n\n\n\n\n\n\n\n\n\n\nQuestion No: " + i + "Number of questions: " + totalNumOfQuestion);
 			quesDbRef = questionDatabase.get(i);
 			showQuestionAndOptions();
 		}
@@ -39,11 +46,14 @@ class TriviaGame extends QuestionDatabase {
 		totalNumOfQuestion = getTotalNumberOfQuestions();
 
 		if (totalNumOfQuestion == 0) {
-			System.out.println("There are 0 questions. Ask admin to add more questions.");
+			System.out.println("\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\nThere are 0 questions. Ask admin to add more questions.");
 			Main.main(null);
 		} else {
 			startGame();
 		}
+		
+		System.out.println("Game Ended!");
+		
 	}
 
 	private static void main(String[] args) {

@@ -90,7 +90,12 @@ public class Admin {
 	private void addQuestion() {
 		
 		//These methods will get required information and set it to global variable of this 'Admin' class
-		getQuestion(); getAns(); getOp1(); getOp2(); getOp3(); getOp4();
+		getQuestion(); 
+		getAns(); 
+		getOp1(); 
+		getOp2(); 
+		getOp3(); 
+		getOp4();
 		
 		//Adding new question set in the QuestionDatabase
 		new QuestionDatabase(question, ans, op1, op2, op3, op4);
