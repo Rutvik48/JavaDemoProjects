@@ -3,59 +3,76 @@ package TriviaGameProject;
 import java.util.Scanner;
 
 public class User {
+
+	// Creating a new instance of a user and Trivia Game
+	User curUser = this;
+	TriviaGame game = new TriviaGame(curUser);
+
+	// private String userName = "";
+	public boolean didUserPlay = false;
+	public User currentUser;
+	Scanner userInput = new Scanner(System.in);
 	
-	private String userName = "";
-	private int totalPoints = 0;
-	static Scanner userInput = new Scanner(System.in);
-	
-	
+	User(){
+		curUser = this;
+		
+	}
+
 	// Gets user's choice and calls 'performChoice' method to
-		private static void getUserChoice() {
+	private void getUserChoice() {
 
-			System.out.println("Press 1 to play it again. \n" + "Press 3 to go main menu.");
-			performChoice(userInput.nextInt());
+		System.out.println("\n\n\n\nPress 1 to play it again. \n" + "Press 3 to go main menu.");
+		performChoice(userInput.nextInt());
+	}
+
+	void performChoice(int choice) {
+
+		switch (choice) {
+		case 1:
+			// Playing the game again
+			game.startGame();
+			break;
+		case 2:
+
+			// Going to main menu.
+			Main.main(null);
+			// Start GameClass instance
+			// loopCond = false;
+			break;
+		default:
+			System.err.println("Wrong input. Try again!");
+			break;
+		}
+	}
+
+	private void checkIfWantToPlayAgain() {
+
+		try {
+			getUserChoice();
+		} catch (Exception e) {
+			System.out.println("Some unexpected error has occured. Restarting the game...");
+			playGame();
+		} finally {
+			checkIfWantToPlayAgain();
+		}
+	}
+
+	public void playGame() {
+
+		// Running the game
+		game.run();
+
+		// 'didUserPlay' will be true if there are questions in the QuestionDatabase
+		// text file.
+		if (curUser.didUserPlay) {
+			// Show and reset score
+			System.out.println("****************************************************************************\n\n"
+					+ "Thank You for playing.\n" + "Your score is: " + game.curPoints +
+					"\n\n****************************************************************************");
 		}
 
-		static void performChoice(int choice) {
-
-			switch (choice) {
-			case 1:
-				run();
-				break;
-			case 2:
-				Main.main(null);
-				// Start GameClass instance
-				// loopCond = false;
-				break;
-			default:
-				System.err.println("Wrong input. Try again!");
-				break;
-			}
-
-		}
-	
-	
-
-	public static void run() {
-		System.out.println("User is open");
-		
-		if (QuestionDatabase.questionDatabase.isEmpty()){
-			
-			new QuestionDatabase("Q1", "ANS1", "Op11", "Op12", "Op13", "Op14");
-			new QuestionDatabase("Q2", "ANS2", "Op21", "Op22", "Op23", "Op24");
-			new QuestionDatabase("Q3", "ANS3", "Op31", "Op32", "Op33", "Op34");
-			new QuestionDatabase("Q4", "ANS4", "Op41", "Op42", "Op43", "Op44");
-			new QuestionDatabase("Q5", "ANS5", "Op51", "Op52", "Op53", "Op54");
-			
-		}
-
-		
-		
-		TriviaGame.run();
-		
-		getUserChoice();
-		
-		
+		// Asking user if he/she wants to play the game again
+		checkIfWantToPlayAgain();
 
 	}
 

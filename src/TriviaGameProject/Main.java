@@ -18,10 +18,11 @@ public class Main {
 		
 		switch (input.nextInt()) {
 		case 1:
-			Admin.run();
+			Admin.showAdminChoices();
 			break;
 		case 2:
-			User.run();
+			User newUser = new User();
+			newUser.playGame();
 			// Start GameClass instance
 			// loopCond = false;
 			break;

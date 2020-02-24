@@ -1,5 +1,12 @@
 package TriviaGameProject;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,10 +18,21 @@ public class QuestionDatabase {
 	private final String OP2;
 	private final String OP3;
 	private final String OP4;
-	public static List<QuestionDatabase> questionDatabase = new ArrayList<>();
+
+	// This is the pattern used to separate data such as:
+	// ""QUESTION/*~*/ANS/*~*/OP1/*~*/OP2/*~*/OP3/*~*/OP4"
+	private final String DEVISER = "//~//";
+
+	// File name of the text file where questions will be stored
+	private final static String FILE_NAME = "QuestionDatabase.txt";
+
+	// This list will save Objects of QuestionDatabase, which will be created when
+	// Admin adds a new question
+	private static List<QuestionDatabase> questionDatabaseObjectList = new ArrayList<>();
+	
+	public static List<String> questionDBList = new ArrayList<>();
 
 	public QuestionDatabase() {
-		// TODO Auto-generated constructor stub
 		this.QUESTION = "";
 		this.ANS = "";
 		this.OP1 = "";
@@ -31,6 +49,28 @@ public class QuestionDatabase {
 		this.OP3 = op3;
 		this.OP4 = op4;
 		addRefToList(this);
+	}
+	
+	public void createThreadToAddIntoFile(String que, String ans, String op1, String op2, String op3, String op4) {
+		
+		Thread thread = new Thread() {
+			public void run() {
+
+				// Formatting the user input to save in a text file.
+				// Which can be used later to retrieve data
+				String formatedString = formatData(que, ans.trim().toLowerCase(), op1, op2, op3, op4);
+
+				try {
+					// Saving formatted string into a file.
+					addQuestionToFile(formatedString);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			};
+		};
+
+		thread.start();
+		
 	}
 
 	// Get Methods
@@ -64,15 +104,19 @@ public class QuestionDatabase {
 	}
 
 	public static int getTotalNumberOfQuestions() {
-		return (questionDatabase.size() - 1);
+		return (questionDatabaseObjectList.size() - 1);
 	}
 
 	private void addRefToList(QuestionDatabase ref) {
-		questionDatabase.add(ref);
+		questionDatabaseObjectList.add(ref);
 	}
 
-	public QuestionDatabase getDatabaseRef(int queNum) {
-		return questionDatabase.get(queNum);
+	public static QuestionDatabase getDatabaseRef(int queNum) {
+		
+		if(questionDatabaseObjectList.size()>0) 
+			return questionDatabaseObjectList.get(queNum);
+		else
+			return new QuestionDatabase();
 	}
 
 	public boolean checkAns(String ans) {
@@ -82,6 +126,52 @@ public class QuestionDatabase {
 			return true;
 		} else {
 			return false;
+		}
+	}
+
+	private static void addQuestionToFile(String text) throws IOException {
+
+		File file = new File(FILE_NAME);
+		FileWriter fr = new FileWriter(file, true);
+		BufferedWriter br = new BufferedWriter(fr);
+		PrintWriter pr = new PrintWriter(br);
+		pr.println(text);
+		pr.close();
+		br.close();
+		fr.close();
+
+	}
+
+	private String formatData(String ques, String ans, String op1, String op2, String op3, String op4) {
+
+		String formattedStr = "";
+
+		formattedStr = ques + DEVISER + ans + DEVISER + op1 + DEVISER + op2 + DEVISER + op3 + DEVISER + op4;
+
+		return formattedStr;
+	}
+
+	void retrieveDataFromTextFile() {
+
+		BufferedReader br;
+		try {
+			br = new BufferedReader(new FileReader(FILE_NAME));
+			
+			//Reading the file using readLine() method
+			String contentLine = br.readLine();
+			
+			while (contentLine != null) {
+				String[] str = contentLine.split(DEVISER);
+				//System.out.println(contentLine);
+				new QuestionDatabase(str[0], str[1], str[2], str[3], str[4], str[5]);
+				questionDBList.add(contentLine);
+				contentLine = br.readLine();
+			}
+			
+			 br.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

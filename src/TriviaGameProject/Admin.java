@@ -3,7 +3,8 @@ package TriviaGameProject;
 import java.util.Scanner;
 
 public class Admin {
-	
+
+
 	private String question = "";
 	private String ans = "";
 	private String op1 = "";
@@ -40,69 +41,66 @@ public class Admin {
 		
 	}
 	
-	private String getQuestion() {
+	private void getQuestion() {
 		
 		System.out.println("Enter Question: ");
 		question = input.next();
-		return question;
+		
+		getAns();
 	}
 
-	private String getAns() {
+	private void getAns() {
 		
 		System.out.println("Enter Ans: ");
 		ans = input.next();
 		
-		return ans;
+		getOp1();
 	}
 	
-	private String getOp1() {
+	private void getOp1() {
 		
 		System.out.println("Enter option 1.");
 		op1 = input.next();
 		
-		return op1;
+		getOp2();
 	}
 	
-	private String getOp2() {
+	private void getOp2() {
 		
 		System.out.println("Enter option 2.");
 		op2 = input.next();
-		
-		return op2;
+		getOp3();
 	}
 	
-	private String getOp3() {
+	private void getOp3() {
 		
 		System.out.println("Enter option 3.");
 		op3 = input.next();
-		return op3;
+		
+		getOp4();
 	}
 	
-	private String getOp4() {
+	private void getOp4() {
 		
 		System.out.println("Enter option 4.");
 		op4 = input.next();
-		
-		return op4;
 	}
 	
 	//This method gets reuired data.
 	private void addQuestion() {
 		
-		//These methods will get required information and set it to global variable of this 'Admin' class
-		getQuestion(); 
-		getAns(); 
-		getOp1(); 
-		getOp2(); 
-		getOp3(); 
-		getOp4();
+		//This method will get required information and set it to global variable of this 'Admin' class
+		getQuestion();
 		
 		//Adding new question set in the QuestionDatabase
-		new QuestionDatabase(question, ans, op1, op2, op3, op4);
+		QuestionDatabase dbRef = new QuestionDatabase(question, ans, op1, op2, op3, op4);
+		
+		//Method of QuestionDatabase class. Used to add data into text file using new Thread  
+		dbRef.createThreadToAddIntoFile(question, ans, op1, op2, op3, op4);
 	}
 	
 	
-	public static void run() {
+	public static void showAdminChoices() {
 		Admin admin = new Admin();
 		//loopCond is true. 
 		while(loopCond) {
